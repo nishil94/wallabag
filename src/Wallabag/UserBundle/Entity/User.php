@@ -75,6 +75,15 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
     private $authCode;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Wallabag\UserBundle\Entity\Group")
+     * @ORM\JoinTable(name="user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+
+    /**
      * @var bool Enabled yes/no
      * @ORM\Column(type="boolean")
      */
