@@ -568,3 +568,8 @@ flashes:
             added: 'Usuário "%username%" adicionado'
             updated: 'Usuário "%username%" atualizado'
             deleted: 'Usuário "%username%" removido'
+    group:
+        notice:
+            # added: 'Group "%name%" added'
+            # updated: 'Group "%name%" updated'
+            # deleted: 'Group "%name%" deleted'
