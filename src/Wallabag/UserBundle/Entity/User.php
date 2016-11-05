@@ -75,7 +75,7 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
     private $authCode;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Wallabag\GroupBundle\Entity\Group")
+     * @ORM\ManyToMany(targetEntity="Wallabag\GroupBundle\Entity\Group", inversedBy="users")
      * @ORM\JoinTable(name="user_group",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
@@ -274,5 +274,10 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
     public function getClients()
     {
         return $this->clients;
+    }
+
+    public function hasGroup($name = '')
+    {
+        return in_array($name, $this->getGroupNames());
     }
 }
