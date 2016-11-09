@@ -31,12 +31,8 @@ menu:
         search: 'Buscar'
         save_link: 'Guardar un enlace'
         back_to_unread: 'Volver a los artículos sin leer'
-<<<<<<< HEAD
         users_management: 'Configuración de usuarios'
-=======
-        # users_management: 'Users management'
         # groups_management: 'Groups management'
->>>>>>> Added groups management
     top:
         add_new_entry: 'Añadir un nuevo artículo'
         search: 'Buscar'

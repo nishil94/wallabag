@@ -16,7 +16,6 @@ security:
 
 menu:
     left:
-<<<<<<< 5da541f5bdeec8ad968ba75a30ca2d19ea64d1f2
         unread: "Non lus"
         starred: "Favoris"
         archive: "Lus"
@@ -33,25 +32,7 @@ menu:
         save_link: "Sauvegarder un nouvel article"
         back_to_unread: "Retour aux articles non lus"
         users_management: "Gestion des utilisateurs"
-=======
-        unread: 'Non lus'
-        starred: 'Favoris'
-        archive: 'Lus'
-        all_articles: 'Tous les articles'
-        config: 'Configuration'
-        tags: 'Tags'
-        internal_settings: 'Configuration interne'
-        import: 'Importer'
-        howto: 'Aide'
-        developer: 'Développeur'
-        logout: 'Déconnexion'
-        about: 'À propos'
-        search: 'Recherche'
-        save_link: 'Sauvegarder un nouvel article'
-        back_to_unread: 'Retour aux articles non lus'
-        users_management: 'Gestion des utilisateurs'
-        groups_management: 'Gestion des groupes'
->>>>>>> Added groups management
+        groups_management: "Gestion des groupes"
     top:
         add_new_entry: "Sauvegarder un nouvel article"
         search: "Rechercher"
