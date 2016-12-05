@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Wallabag\UserBundle\Entity\User;
-use Wallabag\CoreBundle\Entity\Config;
 use Wallabag\CoreBundle\Entity\SiteCredential;
 
 /**

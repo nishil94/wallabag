@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Wallabag\UserBundle\Entity\User;
 
 /**
- * SiteCredential
+ * SiteCredential.
  *
  * @ORM\Entity(repositoryClass="Wallabag\CoreBundle\Repository\SiteCredentialRepository")
  * @ORM\Table(name="`site_credential`")
@@ -27,6 +27,8 @@ class SiteCredential
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      * @ORM\Column(name="host", type="string", length=255)
      */
     private $host;
@@ -34,6 +36,8 @@ class SiteCredential
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      * @ORM\Column(name="username", type="string", length=255)
      */
     private $username;
@@ -41,6 +45,8 @@ class SiteCredential
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
@@ -66,7 +72,7 @@ class SiteCredential
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -76,7 +82,7 @@ class SiteCredential
     }
 
     /**
-     * Set host
+     * Set host.
      *
      * @param string $host
      *
@@ -90,7 +96,7 @@ class SiteCredential
     }
 
     /**
-     * Get host
+     * Get host.
      *
      * @return string
      */
@@ -100,7 +106,7 @@ class SiteCredential
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
      *
@@ -114,7 +120,7 @@ class SiteCredential
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -124,7 +130,7 @@ class SiteCredential
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      *
@@ -138,7 +144,7 @@ class SiteCredential
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -148,7 +154,7 @@ class SiteCredential
     }
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -162,7 +168,7 @@ class SiteCredential
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -189,4 +195,3 @@ class SiteCredential
         }
     }
 }
-
