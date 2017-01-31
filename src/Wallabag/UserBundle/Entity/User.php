@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Wallabag\ApiBundle\Entity\Client;
 use Wallabag\CoreBundle\Entity\Config;
 use Wallabag\CoreBundle\Entity\Entry;
+use Wallabag\GroupBundle\Entity\Group;
+use Wallabag\GroupBundle\Entity\UserGroup;
 
 /**
  * User.
@@ -75,13 +77,11 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
     private $authCode;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Wallabag\GroupBundle\Entity\Group", inversedBy="users", cascade={"persist"})
-     * @ORM\JoinTable(name="user_group",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Wallabag\GroupBundle\Entity\UserGroup", mappedBy="user", cascade={"persist", "remove"})
      */
-    protected $groups;
+    protected $userGroups;
 
     /**
      * @var bool Enabled yes/no
@@ -103,6 +103,7 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
     {
         parent::__construct();
         $this->entries = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
     }
 
@@ -276,8 +277,65 @@ class User extends BaseUser implements TwoFactorInterface, TrustedComputerInterf
         return $this->clients;
     }
 
-    public function hasGroup($name = '')
+    /**
+     * @param Group $group
+     * @return UserGroup
+     */
+    public function getUserGroupFromGroup(Group $group)
     {
-        return in_array($name, $this->getGroupNames());
+        foreach ($this->userGroups as $userGroup) {
+            if ($userGroup->getGroup() == $group) {
+                return $userGroup;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param Group $group
+     * @param $role
+     */
+    public function setGroupRole(Group $group, $role)
+    {
+        if ($userGroup = $this->getUserGroupFromGroup($group)) {
+            $userGroup->setRole($role);
+        }
+    }
+
+    /**
+     * @param Group $group
+     * @return int
+     */
+    public function getGroupRoleForUser(Group $group)
+    {
+        if ($userGroup = $this->getUserGroupFromGroup($group)) {
+            return $userGroup->getRole();
+        }
+        return 0;
+    }
+
+    /**
+     * @param Group $group
+     * @return bool
+     */
+    public function inGroup(Group $group)
+    {
+        if ($group::ACCESS_REQUEST === $group->getAcceptSystem()) {
+            $userGroup = $this->getUserGroupFromGroup($group);
+            return $userGroup->isAccepted();
+        }
+        return null !== $this->getUserGroupFromGroup($group);
+    }
+
+    /**
+     * @return ArrayCollection<Group>
+     */
+    public function getGroups()
+    {
+        $groups = new ArrayCollection();
+        foreach ($this->userGroups as $userGroup) {
+            $groups->add($userGroup->getGroup());
+        }
+        return $groups;
     }
 }

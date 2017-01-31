@@ -224,6 +224,12 @@ class Entry
      */
     private $tags;
 
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Wallabag\GroupBundle\Entity\Group", inversedBy="presentations", cascade={"persist"})
+     */
+    private $groupShares;
+
     /*
      * @param User     $user
      */
