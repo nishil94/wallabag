@@ -379,4 +379,11 @@ class EntryRepository extends EntityRepository
             ->setParameter('userId', $userId)
             ->execute();
     }
+
+    public function findByGroup($groupId)
+	{
+		return $this->createQueryBuilder('p')
+			->innerJoin('p.groupShares', 'g', 'WITH', 'g.id = :group')
+			->setParameter(':group', $groupId);
+	}
 }
