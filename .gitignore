@@ -27,6 +27,8 @@ web/bundles/*
 !web/bundles/wallabagcore
 /web/assets/images/*
 !web/assets/images/.gitkeep
+/web/assets/appicons/*
+!web/assets/appicons/.gitkeep
 
 # Build
 /app/build

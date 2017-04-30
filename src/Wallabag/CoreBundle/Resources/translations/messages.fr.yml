@@ -448,6 +448,7 @@ developer:
     clients:
         title: "Clients"
         create_new: "Créer un nouveau client"
+        create_new_global: Créer un nouveau client global
     existing_clients:
         title: "Les clients existants"
         field_id: "ID Client"
@@ -455,6 +456,9 @@ developer:
         field_uris: "Adresse de redirection"
         field_grant_types: "Type de privilège accordé"
         no_client: "Aucun client pour le moment"
+    existing_global_clients:
+        title: Les clients globaux existants
+        no_client: Aucun client global pour le moment
     remove:
         warn_message_1: "Vous avez la possibilité de supprimer le client %name%. Cette action est IRRÉVERSIBLE !"
         warn_message_2: "Si vous supprimez le client %name%, toutes les applications qui l’utilisaient ne fonctionneront plus avec votre compte wallabag."
@@ -465,6 +469,7 @@ developer:
         form:
             name_label: "Nom du client"
             redirect_uris_label: "Adresses de redirection (optionnel)"
+            redirect_uris_label_required: Adresses de redirection (requis)
             save_label: "Créer un nouveau client"
         action_back: "Retour"
     client_parameter:

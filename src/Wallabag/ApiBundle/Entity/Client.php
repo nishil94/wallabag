@@ -5,6 +5,7 @@ namespace Wallabag\ApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Wallabag\UserBundle\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table("oauth2_clients")
@@ -38,10 +39,31 @@ class Client extends BaseClient
 
     /**
      * @ORM\ManyToOne(targetEntity="Wallabag\UserBundle\Entity\User", inversedBy="clients")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $user;
 
-    public function __construct(User $user)
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\File(
+     *     maxSize = "5M",
+     *     mimeTypes = {"image/jpeg", "image/gif", "image/png", "image/tiff"},
+     *     maxSizeMessage = "The maximum allowed file size is 5MB.",
+     *     mimeTypesMessage = "Only the filetypes image are allowed."
+     * )
+     */
+    private $image;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $description;
+
+    /**
+     * Client constructor.
+     * @param User|null $user
+     */
+    public function __construct(User $user = null)
     {
         parent::__construct();
         $this->user = $user;
@@ -77,5 +99,37 @@ class Client extends BaseClient
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 }

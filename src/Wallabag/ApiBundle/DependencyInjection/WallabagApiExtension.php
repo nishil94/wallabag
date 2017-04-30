@@ -11,6 +11,7 @@ class WallabagApiExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('wallabag_api.applications_icon_path', $config['applications_icon_path']);
     }
 
     public function getAlias()
