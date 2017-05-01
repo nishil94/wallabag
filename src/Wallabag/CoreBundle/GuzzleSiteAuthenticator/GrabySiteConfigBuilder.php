@@ -5,29 +5,39 @@ namespace Wallabag\CoreBundle\GuzzleSiteAuthenticator;
 use BD\GuzzleSiteAuthenticator\SiteConfig\SiteConfig;
 use BD\GuzzleSiteAuthenticator\SiteConfig\SiteConfigBuilder;
 use Graby\SiteConfig\ConfigBuilder;
+use Wallabag\CoreBundle\Repository\SiteCredentialRepository;
+use Wallabag\UserBundle\Entity\User;
 use OutOfRangeException;
 
 class GrabySiteConfigBuilder implements SiteConfigBuilder
 {
     /**
-     * @var \Graby\SiteConfig\ConfigBuilder
+     * @var ConfigBuilder
      */
     private $grabyConfigBuilder;
+
     /**
-     * @var array
+     * @var SiteCredentialRepository
      */
-    private $credentials;
+    private $credentialRepository;
+
+    /**
+     * @var User
+     */
+    private $currentUser;
 
     /**
      * GrabySiteConfigBuilder constructor.
      *
-     * @param \Graby\SiteConfig\ConfigBuilder $grabyConfigBuilder
-     * @param array                           $credentials
+     * @param ConfigBuilder            $grabyConfigBuilder
+     * @param User                     $currentUser
+     * @param SiteCredentialRepository $credentialRepository
      */
-    public function __construct(ConfigBuilder $grabyConfigBuilder, array $credentials = [])
+    public function __construct(ConfigBuilder $grabyConfigBuilder, User $currentUser, SiteCredentialRepository $credentialRepository)
     {
         $this->grabyConfigBuilder = $grabyConfigBuilder;
-        $this->credentials = $credentials;
+        $this->credentialRepository = $credentialRepository;
+        $this->currentUser = $currentUser;
     }
 
     /**
@@ -58,9 +68,11 @@ class GrabySiteConfigBuilder implements SiteConfigBuilder
             'notLoggedInXpath' => $config->not_logged_in_xpath ?: null,
         ];
 
-        if (isset($this->credentials[$host])) {
-            $parameters['username'] = $this->credentials[$host]['username'];
-            $parameters['password'] = $this->credentials[$host]['password'];
+        $credentials = $this->credentialRepository->findOneByHostAndUser($host, $this->currentUser->getId());
+
+        if (null !== $credentials) {
+            $parameters['username'] = $credentials['username'];
+            $parameters['password'] = $credentials['password'];
         }
 
         return new SiteConfig($parameters);
