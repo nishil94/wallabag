@@ -22,11 +22,11 @@ class DeveloperController extends Controller
     public function indexAction()
     {
         $clients = $this->getDoctrine()->getRepository('WallabagApiBundle:Client')->findByUser($this->getUser()->getId());
-        $global_clients = $this->getDoctrine()->getRepository('WallabagApiBundle:Client')->findByUser(null);
+        $globalClients = $this->getDoctrine()->getRepository('WallabagApiBundle:Client')->findByUser(null);
 
         return $this->render('@WallabagCore/themes/common/Developer/index.html.twig', [
             'clients' => $clients,
-            'global_clients' => $global_clients,
+            'global_clients' => $globalClients,
         ]);
     }
 
@@ -134,10 +134,8 @@ class DeveloperController extends Controller
             throw $this->createAccessDeniedException('You can not access this client.');
         }
 
-        if ($img = $client->getImage()) {
-            if ($file = $this->getParameter('wallabag_api.applications_icon_path') . '/' . $img) {
-                unlink($file);
-            }
+        if ($client->getImage() && $file = $this->getParameter('wallabag_api.applications_icon_path') . '/' . $client->getImage()) {
+            unlink($file);
         }
 
         $em = $this->getDoctrine()->getManager();
