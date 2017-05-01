@@ -76,7 +76,7 @@ class DeveloperController extends Controller
             ]);
         }
 
-        return $this->render('@WallabagCore/themes/common/Developer/client.html.twig', [
+        return $this->render('@WallabagCore/themes/common/Developer/global_client.html.twig', [
             'form' => $clientForm->createView(),
         ]);
     }
