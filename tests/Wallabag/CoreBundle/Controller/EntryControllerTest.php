@@ -1155,9 +1155,12 @@ class EntryControllerTest extends WallabagCoreTestCase
         $this->assertCount(1, $crawler->filter('div[class=entry]'));
     }
 
+    /**
+     * This test will require an internet connection.
+     */
     public function testRestrictedArticle()
     {
-        $url = 'https://www.mediapart.fr/journal/france/250117/edf-fait-payer-au-prix-fort-la-centrale-de-fessenheim';
+        $url = 'http://www.monde-diplomatique.fr/2017/05/BONNET/57475';
         $this->logInAs('admin');
         $client = $this->getClient();
         $em = $client->getContainer()->get('doctrine.orm.entity_manager');
@@ -1165,10 +1168,10 @@ class EntryControllerTest extends WallabagCoreTestCase
         // enable restricted access
         $client->getContainer()->get('craue_config')->set('restricted_access', 1);
 
-        // create a new site_credential for mediapart
+        // create a new site_credential
         $user = $client->getContainer()->get('security.token_storage')->getToken()->getUser();
         $credential = new SiteCredential($user);
-        $credential->setHost('mediapart.fr');
+        $credential->setHost('monde-diplomatique.fr');
         $credential->setUsername('foo');
         $credential->setPassword('bar');
 
@@ -1189,12 +1192,17 @@ class EntryControllerTest extends WallabagCoreTestCase
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
 
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertContains('flashes.entry.notice.entry_saved', $crawler->filter('body')->extract(['_text'])[0]);
+
         $content = $em
             ->getRepository('WallabagCoreBundle:Entry')
-            ->findByUrlAndUserId($url.'?onglet=full', $this->getLoggedInUserId());
+            ->findByUrlAndUserId($url, $this->getLoggedInUserId());
 
         $this->assertInstanceOf('Wallabag\CoreBundle\Entity\Entry', $content);
-        $this->assertSame('EDF fait payer au prix fort la centrale de Fessenheim', $content->getTitle());
+        $this->assertSame('Crimes et réformes aux Philippines', $content->getTitle());
 
         $client->getContainer()->get('craue_config')->set('restricted_access', 0);
 
