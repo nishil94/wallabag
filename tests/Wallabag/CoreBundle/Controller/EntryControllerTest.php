@@ -5,6 +5,7 @@ namespace Tests\Wallabag\CoreBundle\Controller;
 use Tests\Wallabag\CoreBundle\WallabagCoreTestCase;
 use Wallabag\CoreBundle\Entity\Config;
 use Wallabag\CoreBundle\Entity\Entry;
+use Wallabag\CoreBundle\Entity\SiteCredential;
 
 class EntryControllerTest extends WallabagCoreTestCase
 {
@@ -1152,5 +1153,52 @@ class EntryControllerTest extends WallabagCoreTestCase
         $crawler = $client->submit($form, $data);
 
         $this->assertCount(1, $crawler->filter('div[class=entry]'));
+    }
+
+    public function testRestrictedArticle()
+    {
+        $url = 'https://www.mediapart.fr/journal/france/250117/edf-fait-payer-au-prix-fort-la-centrale-de-fessenheim';
+        $this->logInAs('admin');
+        $client = $this->getClient();
+        $em = $client->getContainer()->get('doctrine.orm.entity_manager');
+
+        // enable restricted access
+        $client->getContainer()->get('craue_config')->set('restricted_access', 1);
+
+        // create a new site_credential for mediapart
+        $user = $client->getContainer()->get('security.token_storage')->getToken()->getUser();
+        $credential = new SiteCredential($user);
+        $credential->setHost('mediapart.fr');
+        $credential->setUsername('foo');
+        $credential->setPassword('bar');
+
+        $em->persist($credential);
+        $em->flush();
+
+        $crawler = $client->request('GET', '/new');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $crawler->filter('form[name=entry]')->form();
+
+        $data = [
+            'entry[url]' => $url,
+        ];
+
+        $client->submit($form, $data);
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $content = $em
+            ->getRepository('WallabagCoreBundle:Entry')
+            ->findByUrlAndUserId($url.'?onglet=full', $this->getLoggedInUserId());
+
+        $this->assertInstanceOf('Wallabag\CoreBundle\Entity\Entry', $content);
+        $this->assertSame('EDF fait payer au prix fort la centrale de Fessenheim', $content->getTitle());
+
+        $client->getContainer()->get('craue_config')->set('restricted_access', 0);
+
+        $em->createQuery('DELETE FROM Wallabag\CoreBundle\Entity\SiteCredential s WHERE s.id = '.$credential->getId())->execute();
+        $em->createQuery('DELETE FROM Wallabag\CoreBundle\Entity\Entry e WHERE e.id = '.$content->getId())->execute();
     }
 }
