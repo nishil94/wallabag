@@ -1205,8 +1205,5 @@ class EntryControllerTest extends WallabagCoreTestCase
         $this->assertSame('Crimes et réformes aux Philippines', $content->getTitle());
 
         $client->getContainer()->get('craue_config')->set('restricted_access', 0);
-
-        $em->createQuery('DELETE FROM Wallabag\CoreBundle\Entity\SiteCredential s WHERE s.id = '.$credential->getId())->execute();
-        $em->createQuery('DELETE FROM Wallabag\CoreBundle\Entity\Entry e WHERE e.id = '.$content->getId())->execute();
     }
 }
