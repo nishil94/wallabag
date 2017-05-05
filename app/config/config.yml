@@ -228,6 +228,7 @@ fos_oauth_server:
         options:
             refresh_token_lifetime: 1209600
             supported_scopes: read write user
+            enforce_state: true
 
 scheb_two_factor:
     trusted_computer:
